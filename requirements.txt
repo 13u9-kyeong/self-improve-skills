@@ -1,0 +1,2 @@
+# The kit's tools use only the standard library, plus PyYAML to read loop.config.yaml.
+pyyaml>=5.4

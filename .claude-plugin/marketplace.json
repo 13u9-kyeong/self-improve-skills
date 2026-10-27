@@ -1,0 +1,12 @@
+{
+  "name": "selfimprove",
+  "description": "The /selfimprove skill: measured self-improvement loops for agent pipelines.",
+  "owner": { "name": "13u9" },
+  "plugins": [
+    {
+      "name": "selfimprove",
+      "source": "./",
+      "description": "Build a measured self-improvement loop for an agent pipeline in any domain, then run its rounds."
+    }
+  ]
+}

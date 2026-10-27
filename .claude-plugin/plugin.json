@@ -1,0 +1,17 @@
+{
+  "name": "selfimprove",
+  "version": "1.0.0",
+  "description": "Build a measured self-improvement loop for an agent pipeline in any domain: interviews you, builds the scoring layer and gates, then runs scored rounds against a key the pipeline could not see.",
+  "author": {
+    "name": "13u9"
+  },
+  "license": "MIT",
+  "keywords": [
+    "skill",
+    "agents",
+    "evaluation",
+    "self-improvement",
+    "measurement",
+    "methodology"
+  ]
+}

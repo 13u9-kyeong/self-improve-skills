@@ -1,0 +1,101 @@
+# Per-project configuration for the self-improvement loop kit.
+# Every generalized tool in scripts/ and harness/ reads this file. Fill it once per
+# project; the tools need no edits.
+
+# ---------------------------------------------------------------------------
+# What a round is denominated in (rule L-2).
+# The scorer must report TWO numbers and never collapse them: what the pipeline
+# found, and what survived to delivery. Name both here so RESULT.md cannot omit one.
+# ---------------------------------------------------------------------------
+currency:
+  name: "<e.g. award USD / per-item payout / accepted-rejected / grade-weighted>"
+  found_axis: "<what 'found' means here, in their terms, not yours>"
+  delivered_axis: "<what 'survived to delivery' means here>"
+  # A formula if the domain publishes one. Recover any constant from a published
+  # total rather than guessing it, and keep an override for instances where it cannot
+  # be recovered.
+  formula: "<or: none published>"
+
+# ---------------------------------------------------------------------------
+# Pipeline stages, in order. Loss attribution (L-6) names one of these, so a stage
+# that is not listed cannot be blamed and will absorb other stages' failures.
+# ---------------------------------------------------------------------------
+stages:
+  - id: "0"
+    name: setup
+  - id: "1"
+    name: candidate-generation
+  - id: "2"
+    name: verdict
+  - id: "3"
+    name: filing
+  - id: "4"
+    name: delivery
+
+# ---------------------------------------------------------------------------
+# Comparison (scripts/compare.py) and failure classes (scripts/failures.py).
+# How one answer of the agent is compared with the key's entry for the same problem, and
+# the reasons a failed problem may be given. Written before round 1 (L-3); the layer's
+# COMPARE.md says why each rule is what it is.
+#   rule: exact | text (case/space-insensitive) | number (tol) | set | judge (tier 4)
+# ---------------------------------------------------------------------------
+compare:
+  unit: null
+  fields: []
+  # - {name: total, rule: number, tol: 0.01}
+  # - {name: vendor, rule: text}
+  # - {name: summary, rule: judge}
+  failure_classes: []
+  # - {id: input_misread, means: "the input was read incorrectly before any reasoning"}
+  # built in: not_attempted, format, key_dispute
+
+# The stage where the metric's ceiling is set (L-7). Leave null until round 1 has
+# established it MECHANICALLY — by searching every artifact for a missed item's
+# mechanism, not by reasoning about which stage "should" be responsible.
+ceiling_stage: null
+
+# ---------------------------------------------------------------------------
+# Gates. Each must obey the exit-code rule (L-8): 0 PASS / 1 FAIL / 2 CANNOT / 3 USAGE.
+# harness/conformance/test_exit_codes.py drives every entry below.
+#
+# Arg recipes use placeholders the test substitutes with real temp files:
+#   {empty}    a zero-byte file        {dir}     an empty directory
+#   {badjson}  a file of invalid JSON  {tmp}     a writable temp dir
+#   {fixture}  the path in fail_fixture, written verbatim from fail_fixture_body
+# ---------------------------------------------------------------------------
+# Start each gate from templates/gate.py (copy it to scripts/<name>.py).
+gates: []
+# - name: cause_gate                 # scripts/cause_gate.py, copied from templates/gate.py
+#   cannot_args: ["{badjson}"]
+#   # Optional but strongly recommended: a readable input holding a REAL violation.
+#   # This is the axis that notices a gate which quietly stopped checking.
+#   fail_args: ["{fixture}"]
+#   fail_fixture_body: |
+#     {"items": [{"id": "x"}]}
+
+# ---------------------------------------------------------------------------
+# Card linting (L-11). A learned card naming a specific target teaches nothing about
+# the next one, so proper nouns are banned mechanically.
+#
+# The allow-list holds vocabulary a DIFFERENT target on the same runtime would use
+# identically — language builtins, standard library surface, protocol/format names,
+# and this project's own component names. That test is the whole rule: if a different
+# target would write the same word, it carries no target identity.
+# ---------------------------------------------------------------------------
+cards:
+  dir: references/learned
+  vocab_allow: []
+  # - <checker name>  # tool names — any target on this runtime uses them
+  # - <api surface>   # standard library / platform surface
+  # - CANNOT          # this kit's own gate vocabulary
+
+# ---------------------------------------------------------------------------
+# Sealed-key inventory (L-5). This number sets the iteration rate and nothing else.
+# Under ~10: batch methodology changes into fewer, larger rounds from the start.
+# ---------------------------------------------------------------------------
+sealed:
+  ledger: SEALED.md
+  # "unlimited" when the key is a public fix history: the parent commit of any fix
+  # is a live instance, so inventory is bounded only by the project's history.
+  inventory: 0
+  spend_per_methodology_change: 1

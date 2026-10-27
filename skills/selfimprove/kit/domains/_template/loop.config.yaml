@@ -1,0 +1,48 @@
+# loop.config.yaml — <domain> instance.
+# Copy to the project root and fill the brackets. See ../../loop.config.yaml for field docs.
+
+currency:
+  name: "<the domain's own denomination>"
+  found_axis: "<what 'found' means here, in their terms, not yours>"
+  delivered_axis: "<the HARDEST the destination offers>"
+  formula: "<or: none published>"
+
+stages:
+  - {id: "0", name: <first>}
+  # ... in order; loss attribution names one of these
+
+# How one answer is compared with the key, and what failures are called (COMPARE.md).
+compare:
+  unit: "<one problem is ...>"
+  fields:
+    - {name: <field>, rule: <exact|text|number|set|judge>}
+    # - {name: total, rule: number, tol: 0.01}
+  failure_classes:
+    - {id: <class_id>, means: "<a reason a problem fails, about the pipeline>"}
+    # built in: not_attempted, format, key_dispute
+
+# Leave null until round 1 establishes it with scripts/ceiling.py (L-7).
+ceiling_stage: null
+
+gates:
+  - name: <gate>
+    cannot_args: ["--<arg>", "{empty}"]
+    fail_args: ["--<arg>", "{fixture}"]
+    fail_fixture_body: |
+      <the smallest input this gate must reject>
+
+cards:
+  dir: references/learned
+  vocab_allow:
+    # Vocabulary a DIFFERENT subject in the same domain uses identically.
+    - CANNOT
+    - PASS
+    - FAIL
+    - USAGE
+    # add: tool/checker names, standard surface, taxonomy ids, format names
+
+sealed:
+  ledger: SEALED.md
+  # Class A (fix history): "unlimited". Class C via historical reconstruction: count them.
+  inventory: 0
+  spend_per_methodology_change: 1
